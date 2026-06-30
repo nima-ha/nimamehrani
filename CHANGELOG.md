@@ -4,6 +4,34 @@ Auto-generated from conventional commits.
 
 ### 2026-06-30
 
+zero day
+Signed-off-by: nima-ha <nimaxmehrani@gmail.com>
+### 2026-06-30
+
+fix: add force-static export to sitemap and robots for static export
+
+### 2026-06-30
+
+feat: rebrand site for Nima Mehrani with proper GitHub Pages config
+
+### 2026-06-30
+
+chore: update CI status
+
+### 2026-06-30
+
+chore: update repo stats
+
+### 2026-06-29
+
+chore: update CI status
+
+### 2026-06-29
+
+chore: update changelog
+
+### 2026-06-30
+
 clean: remove test webhook files
 
 ### 2026-06-29
@@ -174,31 +202,3 @@ upgrade 3D profile workflow to xarthurx/github-3d-profile with Solarized theme, 
 ### 2026-06-07
 
 Update README.md
-Signed-off-by: Maddix Mhn <49093105+mohammadmehrani@users.noreply.github.com>
-### 2026-06-05
-
-Add files via upload
-Signed-off-by: Mohammad Mhn <49093105+mohammadmehrani@users.noreply.github.com>
-### 2026-06-05
-
-My CV 2026
-Signed-off-by: Mohammad Mhn <49093105+mohammadmehrani@users.noreply.github.com>
-### 2026-02-24
-
-Update README.md
-Signed-off-by: Mohammad Mehrani <49093105+mohammadmehrani@users.noreply.github.com>
-### 2026-02-24
-
-initialize
-
-### 2026-02-24
-
-finalize
-
-### 2026-02-24
-
-upcli
-
-### 2026-02-24
-
-update CLI

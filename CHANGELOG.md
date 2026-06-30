@@ -4,6 +4,18 @@ Auto-generated from conventional commits.
 
 ### 2026-06-30
 
+feat: change site font to Vazirmatn
+
+### 2026-06-30
+
+chore: update CI status
+
+### 2026-06-30
+
+chore: update changelog
+
+### 2026-06-30
+
 feat: replace all images with fresh lively photos
 
 ### 2026-06-30
@@ -190,15 +202,3 @@ fix: changelog workflow YAML parsing issue
 
 chore: update CI status
 
-### 2026-06-29
-
-feat: add GitHub automation workflows, activity feed, and repo stats to portfolio
-
-### 2026-06-29
-
-fix resume download link to M.Mehrani2026.pdf on both Vercel and GitHub Pages
-
-### 2026-06-29
-
-upgrade next from 14.2.35 to 15.5.18
-Bumps [next](https://github.com/vercel/next.js) from 14.2.35 to 15.5.18.

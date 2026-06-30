@@ -1,70 +1,44 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, useAnimation, useInView, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useAnimation, useInView, useReducedMotion } from "framer-motion";
 import content from "../data/content.json";
 import activityData from "../data/activity.json";
 import statsData from "../data/stats.json";
-import ThreeBackground from "../components/ThreeBackground";
 
-const GITHUB_USER = "nimamehrani";
-const WORKER_URL = "https://github-hub.nimamehrani.workers.dev";
-
-const reveal3d = {
-  hidden: { opacity: 0, y: 40, rotateX: -16, scale: 0.97 },
-  visible: { opacity: 1, y: 0, rotateX: 0, scale: 1 }
-};
-
-function Reveal({ as = "div", className, children, amount = 0.2, duration = 0.55, reduceMotion = false }) {
+function Reveal({ children, className, delay = 0 }) {
   const ref = useRef(null);
-  const controls = useAnimation();
-  const isInView = useInView(ref, { amount, once: false });
-  const MotionTag = as === "section" ? motion.section : as === "article" ? motion.article : motion.div;
-
+  const ctrl = useAnimation();
+  const inView = useInView(ref, { amount: 0.15, once: true });
+  const reduce = useReducedMotion();
   useEffect(() => {
-    if (reduceMotion) {
-      controls.set("visible");
-      return;
-    }
-    controls.start(isInView ? "visible" : "hidden");
-  }, [controls, isInView, reduceMotion]);
-
+    if (reduce) { ctrl.set("visible"); return; }
+    ctrl.start(inView ? "visible" : "hidden");
+  }, [ctrl, inView, reduce]);
   return (
-    <MotionTag
-      ref={ref}
-      className={className}
-      variants={reveal3d}
-      initial={reduceMotion ? "visible" : "hidden"}
-      animate={controls}
-      transition={{ duration, ease: "easeOut" }}
+    <motion.div ref={ref} className={className}
+      variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
+      initial={reduce ? "visible" : "hidden"} animate={ctrl}
+      transition={{ duration: 0.5, delay, ease: "easeOut" }}
     >
       {children}
-    </MotionTag>
+    </motion.div>
   );
 }
 
-export default function HomePage() {
+export default function Home() {
   const [lang, setLang] = useState("en");
   const [theme, setTheme] = useState("dark");
-  const [stealth, setStealth] = useState(false);
-  const [liveActivity, setLiveActivity] = useState(activityData);
-  const [liveStats, setLiveStats] = useState(statsData);
-  const shouldReduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll();
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 25, mass: 0.2 });
-  const heroY = useTransform(smoothProgress, [0, 1], [0, -36]);
-  const heroRotateX = useTransform(smoothProgress, [0, 1], [0, 6]);
-  const heroRotateY = useTransform(smoothProgress, [0, 1], [0, -5]);
+  const [activity, setActivity] = useState(activityData);
+  const [stats, setStats] = useState(statsData);
+  const reduce = useReducedMotion();
+  const t = useMemo(() => content[lang], [lang]);
 
   useEffect(() => {
-    const savedLang = localStorage.getItem("site_lang");
-    const savedTheme = localStorage.getItem("site_theme");
-    const params = new URLSearchParams(window.location.search);
-    if (savedLang === "fa") setLang("fa");
-    if (savedTheme === "light") setTheme("light");
-    if (params.has("stealth") || localStorage.getItem("stealth") === "true") setStealth(true);
+    const sl = localStorage.getItem("site_lang");
+    const st = localStorage.getItem("site_theme");
+    if (sl === "fa") setLang("fa");
+    if (st === "light") setTheme("light");
   }, []);
 
   useEffect(() => {
@@ -80,246 +54,306 @@ export default function HomePage() {
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+      window.addEventListener("load", () => navigator.serviceWorker.register("/nimamehrani/sw.js").catch(() => {}));
     }
   }, []);
 
-  useEffect(() => {
-    let mounted = true;
-    async function fetchLive() {
-      try {
-        const [act, st] = await Promise.all([
-          fetch(WORKER_URL + "/api/activity").then(r => r.json()),
-          fetch(WORKER_URL + "/api/stats").then(r => r.json())
-        ]);
-        if (mounted) {
-          if (Array.isArray(act) && act.length > 0) setLiveActivity(act);
-          if (st && typeof st.stars === "number") setLiveStats(st);
-        }
-      } catch {}
-    }
-    fetchLive();
-    const interval = setInterval(fetchLive, 60000);
-    return () => { mounted = false; clearInterval(interval); };
-  }, []);
-
-  const t = useMemo(() => content[lang], [lang]);
-
-  const scrollRef = useRef(0);
-  useEffect(() => {
-    return smoothProgress.on("change", (v) => { scrollRef.current = v; });
-  }, []);
+  const floatingIcons = [{
+    icon: "\u{1F310}", top: "10%", left: "5%", delay: "0s"
+  }, {
+    icon: "\u{2328}\uFE0F", top: "15%", right: "8%", delay: "1s"
+  }, {
+    icon: "\u{1F4BB}", bottom: "20%", left: "10%", delay: "2s"
+  }, {
+    icon: "\u{1F578}\uFE0F", bottom: "15%", right: "5%", delay: "0.5s"
+  }, {
+    icon: "\u{1F3A8}", top: "40%", left: "3%", delay: "1.5s"
+  }, {
+    icon: "\u{1F680}", top: "35%", right: "3%", delay: "2.5s"
+  }];
 
   return (
     <>
-      <ThreeBackground scrollY={scrollRef} />
-      <div className="terminal-bg" aria-hidden="true">
-        <div className="terminal-grid" />
-        <div className="terminal-scanline" />
-        <div className="terminal-rain">
-          {["$ kubectl get pods", "$ terraform plan", "$ git push origin main", "$ docker compose up"].map((line) => (
-            <span key={line}>{line}</span>
-          ))}
-        </div>
-      </div>
+      <div className="gradient-bg" />
+
       <header className="topbar">
-        <strong className="brand" style={{ visibility: stealth ? "hidden" : "visible" }}>N.Mehrani</strong>
+        <a href="#home" className="logo">N.Mehrani</a>
         <nav>
-          {t.nav.map((item) => (
-            <a key={item} href="#" onClick={(e) => e.preventDefault()}>
-              {item}
-            </a>
+          {["about", "skills", "experience", "education", "projects", "contact"].map((s) => (
+            <a key={s} href={`#${s}`}>{t.nav[["About","Skills","Experience","Education","Projects","Certifications","Contact"].indexOf(s.charAt(0).toUpperCase() + s.slice(1))] || s}</a>
           ))}
         </nav>
         <div className="actions">
-          <button onClick={() => { setStealth((v) => !v); localStorage.setItem("stealth", (!stealth).toString()); }}
-            title={stealth ? "Show personal info" : "Hide personal info"} style={{ opacity: stealth ? 0.6 : 1 }}>
-            {stealth ? "👤" : "👻"}
-          </button>
-          <button onClick={() => setLang((v) => (v === "en" ? "fa" : "en"))}>{lang === "en" ? "FA" : "EN"}</button>
-          <button onClick={() => setTheme((v) => (v === "dark" ? "light" : "dark"))}>
-            {theme === "dark" ? "Light" : "Dark"}
+          <button onClick={() => setLang(v => v === "en" ? "fa" : "en")}>{lang === "en" ? "FA" : "EN"}</button>
+          <button onClick={() => setTheme(v => v === "dark" ? "light" : "dark")}>
+            {theme === "dark" ? "\u2600\uFE0F" : "\uD83C\uDF19"}
           </button>
         </div>
       </header>
 
-      <main className="shell">
-        <motion.section className="hero" style={shouldReduceMotion ? undefined : { y: heroY, rotateX: heroRotateX, rotateY: heroRotateY }}>
-          {!stealth && <Reveal amount={0.3} reduceMotion={shouldReduceMotion}>
-            <p className="eyebrow">{t.hero.eyebrow}</p>
-            <h1>{t.hero.title}</h1>
-            <p className="muted">{t.hero.desc}</p>
-            <div className="row-btn">
-              <Link className="btn" href="/pdf/N.Mehrani-CV.pdf" target="_blank" rel="noreferrer">{t.hero.ctaResume}</Link>
-              <Link className="btn" href="#contact">{t.hero.ctaHire}</Link>
+      <section className="hero" id="home">
+        <div className="floating-elements">
+          {floatingIcons.map((el, i) => (
+            <span key={i} style={{
+              top: el.top, left: el.left, right: el.right, bottom: el.bottom,
+              animationDelay: el.delay
+            }}>{el.icon}</span>
+          ))}
+        </div>
+        <div className="hero-content">
+          <Reveal>
+            <div className="hero-badge">
+              <span>{t.hero.chip}</span>
+              {t.hero.location}
             </div>
-          </Reveal>}
-          {!stealth && <Reveal className="photo-wrap" amount={0.3} reduceMotion={shouldReduceMotion}>
-            <Image
-              src="/images/mehrani.jpg"
-              alt="Nima Mehrani"
-              width={320}
-              height={320}
-              priority
-              sizes="(max-width: 980px) 70vw, 320px"
-            />
-            <span className="chip">{t.hero.chip}</span>
-          </Reveal>}
-        </motion.section>
-
-        <section className="grid two">
-          <Reveal as="article" className="card" amount={0.2} reduceMotion={shouldReduceMotion}>
-            <h2>{t.about.title}</h2>
-            <p className="muted">{t.about.p1}</p>
-            <p className="muted">{t.about.p2}</p>
           </Reveal>
-          <Reveal as="article" className="card" amount={0.2} reduceMotion={shouldReduceMotion}>
-            <h3>{t.about.quickTitle}</h3>
-            <ul className="facts">
-              {t.about.quick.map(([k, v]) => (
-                <li key={k}>
-                  <span>{k}</span>
-                  <strong>{v}</strong>
-                </li>
+          <Reveal delay={0.15}>
+            <h1>
+              {lang === "fa" ? "\u0647\u0645\u0648\u0646 \u0637\u0631\u0627\u062D\u06CC \u0648 \u0633\u0627\u062E\u062A" : "Hey, I'm"} <span className="gradient-text">Nima Mehrani</span>
+              <br />{t.hero.title}
+            </h1>
+          </Reveal>
+          <Reveal delay={0.3}>
+            <p>{t.hero.desc}</p>
+          </Reveal>
+          <Reveal delay={0.45}>
+            <div className="hero-actions">
+              <a className="btn btn-primary" href="/nimamehrani/pdf/N.Mehrani-CV.pdf" target="_blank">
+                {t.hero.ctaResume}
+              </a>
+              <a className="btn btn-outline" href="#contact">{t.hero.ctaHire}</a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <div className="container">
+        <section id="about">
+          <Reveal>
+            <span className="section-label">{t.about.title}</span>
+            <h2 className="section-title">{t.about.quickTitle}</h2>
+          </Reveal>
+          <div className="about-card">
+            <Reveal className="about-me-text" delay={0.1}>
+              <div className="card">
+                <p>{t.about.p1}</p>
+                <p>{t.about.p2}</p>
+              </div>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <div className="facts-list">
+                {t.about.quick.map(([k, v]) => (
+                  <div key={k} className="fact-item">
+                    <span>{k}</span>
+                    <strong>{v}</strong>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        <section id="skills">
+          <Reveal>
+            <span className="section-label">{t.skills.title}</span>
+            <h2 className="section-title">{t.skills.title}</h2>
+            <p className="section-desc">{t.skills.desc}</p>
+          </Reveal>
+          <div className="skills-grid">
+            {t.skills.items.map(([name, level], i) => (
+              <Reveal key={name} delay={i * 0.08}>
+                <div className="skill-item">
+                  <div className="skill-header">
+                    <span>{name}</span>
+                    <strong>{level}%</strong>
+                  </div>
+                  <div className="skill-bar">
+                    <motion.div className="skill-bar-fill"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${level}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1, delay: 0.3 + i * 0.1 }}
+                    />
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal delay={0.4}>
+            <div className="skill-tags">
+              {["WordPress", "PHP", "JavaScript", "React", "HTML5", "CSS3", "MySQL", "WooCommerce", "Elementor", "SEO", "Git", "UI/UX"].map(tag => (
+                <span key={tag}>{tag}</span>
               ))}
-            </ul>
+            </div>
           </Reveal>
         </section>
 
-        <Reveal as="section" className="card" amount={0.18} reduceMotion={shouldReduceMotion}>
-          <h2>{t.skills.title}</h2>
-          <p className="muted">{t.skills.desc}</p>
-          <div className="skills">
-            {t.skills.items.map(([name, level]) => (
-              <Reveal key={name} amount={0.18} duration={0.5} reduceMotion={shouldReduceMotion}>
-                <div className="skill-head"><span>{name}</span><strong>{level}%</strong></div>
-                <div className="meter"><span style={{ width: `${level}%` }} /></div>
-              </Reveal>
-            ))}
-          </div>
-        </Reveal>
-
-        <Reveal as="section" className="card" amount={0.18} reduceMotion={shouldReduceMotion}>
-          <h2>{t.experience.title}</h2>
-          <p className="muted">{t.experience.desc}</p>
+        <section id="experience">
+          <Reveal>
+            <span className="section-label">{t.experience.title}</span>
+            <h2 className="section-title">{t.experience.title}</h2>
+            <p className="section-desc">{t.experience.desc}</p>
+          </Reveal>
           <div className="timeline">
-            {t.experience.items.map((item) => (
-              <Reveal key={item[0] + item[1]} as="article" amount={0.2} duration={0.5} reduceMotion={shouldReduceMotion}>
-                <div className="meta"><strong>{item[1]}</strong><span>{item[0]}</span></div>
-                <h3>{item[2]}</h3>
-                <p className="muted">{item[3]}</p>
-              </Reveal>
-            ))}
-          </div>
-        </Reveal>
-
-        <Reveal as="section" className="card" amount={0.18} reduceMotion={shouldReduceMotion}>
-          <h2>{t.education.title}</h2>
-          <p className="muted">{t.education.desc}</p>
-          <div className="timeline">
-            {t.education.items.map((item) => (
-              <Reveal key={item[0] + item[1]} as="article" amount={0.2} duration={0.5} reduceMotion={shouldReduceMotion}>
-                <div className="meta"><strong>{item[1]}</strong><span>{item[0]}</span></div>
-                <h3>{item[2]}</h3>
-                <p className="muted">{item[3]}</p>
-              </Reveal>
-            ))}
-          </div>
-        </Reveal>
-
-        <Reveal as="section" className="card" amount={0.18} reduceMotion={shouldReduceMotion}>
-          <h2>{t.projects.title}</h2>
-          <p className="muted">{t.projects.desc}</p>
-          <div className="grid three">
-            {t.projects.items.map((p) => (
-              <Reveal key={p[1]} as="article" className="project" amount={0.2} duration={0.5} reduceMotion={shouldReduceMotion}>
-                <Image src={p[0]} alt={p[1]} width={960} height={600} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 980px) 50vw, 33vw" />
-                <h3>{p[1]}</h3>
-                <p className="muted">{p[2]}</p>
-              </Reveal>
-            ))}
-          </div>
-        </Reveal>
-
-        <Reveal as="section" className="card" amount={0.18} reduceMotion={shouldReduceMotion}>
-          <h2>{t.certifications.title}</h2>
-          <p className="muted">{t.certifications.desc}</p>
-          <div className="grid three cert-grid">
-            {t.certifications.images.map((src) => (
-              <Reveal key={src} amount={0.2} duration={0.5} reduceMotion={shouldReduceMotion}>
-                <Image src={src} alt="Certificate" width={900} height={675} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 980px) 50vw, 33vw" />
-              </Reveal>
-            ))}
-          </div>
-        </Reveal>
-
-        <Reveal as="section" className="card" amount={0.18} reduceMotion={shouldReduceMotion}>
-          <h2>{t.activity.title}</h2>
-          <p className="muted">{t.activity.desc}</p>
-          <div className="activity-feed">
-            {liveActivity.length === 0 ? (
-              <p className="muted" style={{ textAlign: "center", padding: "1rem 0" }}>{t.activity.empty}</p>
-            ) : (
-              liveActivity.slice(0, 10).map((a, i) => (
-                <div key={i} className="activity-item">
-                  <span>{a.icon}</span>
-                  <span className="muted">{a.message}</span>
-                  <span className="activity-date">{new Date(a.date).toLocaleDateString(lang === "fa" ? "fa-IR" : "en-US")}</span>
+            {t.experience.items.map((item, i) => (
+              <Reveal key={item[0] + item[1]} delay={i * 0.12}>
+                <div className="timeline-item">
+                  <div className="meta">
+                    <strong>{item[1]}</strong>
+                    <span>{item[0]}</span>
+                  </div>
+                  <h4>{item[2]}</h4>
+                  <p>{item[3]}</p>
                 </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section id="education">
+          <Reveal>
+            <span className="section-label">{t.education.title}</span>
+            <h2 className="section-title">{t.education.title}</h2>
+            <p className="section-desc">{t.education.desc}</p>
+          </Reveal>
+          <div className="timeline">
+            {t.education.items.map((item, i) => (
+              <Reveal key={item[0] + item[1]} delay={i * 0.12}>
+                <div className="timeline-item">
+                  <div className="meta">
+                    <strong>{item[1]}</strong>
+                    <span>{item[0]}</span>
+                  </div>
+                  <h4>{item[2]}</h4>
+                  <p>{item[3]}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section id="projects">
+          <Reveal>
+            <span className="section-label">{t.projects.title}</span>
+            <h2 className="section-title">{t.projects.title}</h2>
+            <p className="section-desc">{t.projects.desc}</p>
+          </Reveal>
+          <div className="grid-3">
+            {t.projects.items.map((p, i) => (
+              <Reveal key={p[1]} delay={i * 0.12}>
+                <div className="project-card">
+                  <div className="img-wrap">
+                    <img src={p[0]} alt={p[1]} loading="lazy" />
+                  </div>
+                  <div className="body">
+                    <h3>{p[1]}</h3>
+                    <p>{p[2]}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section id="certifications">
+          <Reveal>
+            <span className="section-label">{t.certifications.title}</span>
+            <h2 className="section-title">{t.certifications.title}</h2>
+            <p className="section-desc">{t.certifications.desc}</p>
+          </Reveal>
+          <div className="cert-grid">
+            {t.certifications.images.map((src, i) => (
+              <Reveal key={src} delay={i * 0.1}>
+                <img src={src} alt={`Cert ${i + 1}`} loading="lazy" />
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section id="stats">
+          <Reveal>
+            <span className="section-label">{t.stats.title}</span>
+            <h2 className="section-title">{t.stats.title}</h2>
+            <p className="section-desc">{t.stats.desc}</p>
+          </Reveal>
+          <div className="stats-row">
+            <Reveal delay={0}><div className="stat-box"><div className="num">{stats.stars ?? 0}</div><label>Stars</label></div></Reveal>
+            <Reveal delay={0.1}><div className="stat-box"><div className="num">{stats.forks ?? 0}</div><label>Forks</label></div></Reveal>
+            <Reveal delay={0.2}><div className="stat-box"><div className="num">{stats.open_issues ?? 0}</div><label>Issues</label></div></Reveal>
+            <Reveal delay={0.3}><div className="stat-box"><div className="num">{stats.watchers ?? 0}</div><label>Watchers</label></div></Reveal>
+          </div>
+        </section>
+
+        <section id="contact">
+          <Reveal>
+            <span className="section-label">{t.contact.title}</span>
+            <h2 className="section-title">{t.contact.title}</h2>
+            <p className="section-desc">{t.contact.desc}</p>
+          </Reveal>
+          <div className="grid-2">
+            <Reveal delay={0.1}>
+              <div className="card card-gradient">
+                <form className="contact-form" action="https://formspree.io/f/mwkyjjza" method="POST">
+                  <input name="name" placeholder={lang === "fa" ? "\u0646\u0627\u0645" : "Your name"} required />
+                  <input name="_replyto" type="email" placeholder={lang === "fa" ? "\u0627\u06CC\u0645\u06CC\u0644" : "Your email"} required />
+                  <textarea name="message_body" rows="4" placeholder={lang === "fa" ? "\u067E\u06CC\u0627\u0645" : "Your message"} required />
+                  <button className="btn btn-primary" type="submit">
+                    {lang === "fa" ? "\u0627\u0631\u0633\u0627\u0644 \u067E\u06CC\u0627\u0645" : "Send Message"}
+                  </button>
+                </form>
+              </div>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <div className="contact-info">
+                <a href="tel:+989377798775">
+                  <span className="icon icon-purple">{lang === "fa" ? "\uD83D\uDCDE" : "\uD83D\uDCDE"}</span>
+                  <span>09377798775</span>
+                </a>
+                <a href="mailto:nima@nimamehrani.ir">
+                  <span className="icon icon-pink">{"\u2709\uFE0F"}</span>
+                  <span>nima@nimamehrani.ir</span>
+                </a>
+                <a href="https://t.me/Nima4mehrani" target="_blank">
+                  <span className="icon icon-teal">{lang === "fa" ? "\uD83D\uDCE8" : "\uD83D\uDCE8"}</span>
+                  <span>Telegram: @Nima4mehrani</span>
+                </a>
+                <a href="https://github.com/nimamehrani" target="_blank">
+                  <span className="icon icon-yellow">{lang === "fa" ? "\uD83D\uDCBB" : "\uD83D\uDCBB"}</span>
+                  <span>GitHub: nimamehrani</span>
+                </a>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        <section id="activity">
+          <Reveal>
+            <span className="section-label">{t.activity.title}</span>
+            <h2 className="section-title">{t.activity.title}</h2>
+            <p className="section-desc">{t.activity.desc}</p>
+          </Reveal>
+          <div className="activity-list">
+            {activity.length === 0 ? (
+              <p style={{ color: "var(--muted)", textAlign: "center", padding: "20px" }}>{t.activity.empty}</p>
+            ) : (
+              activity.slice(0, 8).map((a, i) => (
+                <Reveal key={i} delay={i * 0.05}>
+                  <div className="activity-item">
+                    <span>{a.icon}</span>
+                    <span>{a.message}</span>
+                    <span className="date">{new Date(a.date).toLocaleDateString(lang === "fa" ? "fa-IR" : "en-US")}</span>
+                  </div>
+                </Reveal>
               ))
             )}
           </div>
-        </Reveal>
+        </section>
+      </div>
 
-        <Reveal as="section" className="card" amount={0.18} reduceMotion={shouldReduceMotion}>
-          <h2>{t.stats.title}</h2>
-          <p className="muted">{t.stats.desc}</p>
-          <div className="stats-grid">
-            <div className="stat-box"><strong>⭐</strong><span>{liveStats.stars ?? 0}</span><label>Stars</label></div>
-            <div className="stat-box"><strong>🔱</strong><span>{liveStats.forks ?? 0}</span><label>Forks</label></div>
-            <div className="stat-box"><strong>📋</strong><span>{liveStats.open_issues ?? 0}</span><label>Issues</label></div>
-            <div className="stat-box"><strong>👁️</strong><span>{liveStats.watchers ?? 0}</span><label>Watchers</label></div>
-          </div>
-        </Reveal>
-
-        {!stealth && <section id="contact" className="grid two">
-          <Reveal as="article" className="card" amount={0.2} duration={0.5} reduceMotion={shouldReduceMotion}>
-            <h2>{t.contact.title}</h2>
-            <p className="muted">{t.contact.desc}</p>
-            <form className="form" action="https://formspree.io/f/mwkyjjza" method="POST">
-              <input name="name" placeholder={lang === "fa" ? "\u0646\u0627\u0645 \u0634\u0645\u0627" : "Your name"} required />
-              <input name="_replyto" type="email" placeholder={lang === "fa" ? "\u0627\u06cc\u0645\u06cc\u0644 \u0634\u0645\u0627" : "Your email"} required />
-              <textarea name="message_body" rows="5" placeholder={lang === "fa" ? "\u067e\u06cc\u0627\u0645 \u0634\u0645\u0627" : "Message"} required />
-              <button className="btn" type="submit">{lang === "fa" ? "\u0627\u0631\u0633\u0627\u0644 \u067e\u06cc\u0627\u0645" : "Send Message"}</button>
-            </form>
-          </Reveal>
-          <Reveal as="article" className="card" amount={0.2} duration={0.5} reduceMotion={shouldReduceMotion}>
-            <h3>{t.contact.reach}</h3>
-            <ul className="contacts">
-              <li><a href="mailto:nima@nimamehrani.ir">nima@nimamehrani.ir</a></li>
-              <li>{t.hero.location}</li>
-            </ul>
-            <p className="muted" style={{ marginTop: "1rem" }}>{t.contact.sites}</p>
-            <ul className="contacts">
-              <li><a href="https://nima-ha.github.io/nimamehrani/" target="_blank" rel="noreferrer">nima-ha.github.io/nimamehrani</a></li>
-            </ul>
-            <div className="map-box" style={{ marginTop: "1.5rem" }}>
-              <div className="map-head">
-                <h4>{t.contact.mapTitle}</h4>
-                <a href={lang === "fa" ? "https://www.openstreetmap.org/?mlat=35.7605&mlon=51.3665#map=14/35.7605/51.3665" : "https://www.google.com/maps?q=35.7605,51.3665"} target="_blank" rel="noreferrer">{t.contact.mapOpen}</a>
-              </div>
-              <iframe
-                title="Tehran map - Shahrak Gharb"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                src={lang === "fa" ? "https://www.openstreetmap.org/export/embed.html?bbox=51.3500%2C35.7500%2C51.3830%2C35.7710&layer=mapnik&marker=35.7605%2C51.3665" : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d810.0!2d51.3665!3d35.7605!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z!5e0!3m2!1sen!2s"}
-                style={{ width: "100%", height: 220, border: 0, borderRadius: 8, marginTop: "0.5rem" }}
-              />
-            </div>
-          </Reveal>
-        </section>}
-      </main>
+      <footer className="footer">
+        <p>&copy; {new Date().getFullYear()} Nima Mehrani &mdash; Built with {"\u2764\uFE0F"} &amp; {"\u2615"}
+        </p>
+      </footer>
     </>
   );
 }
-

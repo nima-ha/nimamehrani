@@ -1,6 +1,6 @@
 export default function robots() {
   return {
     rules: [{ userAgent: '*', allow: '/' }],
-    sitemap: 'https://mohammadmehrani.github.io/sitemap.xml'
+    sitemap: 'https://nima-ha.github.io/nimamehrani/sitemap.xml'
   };
 }

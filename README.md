@@ -1,4 +1,4 @@
-# Mohammad Mehrani
+# Nima Mehrani
 
 <p align="center">
   <picture>
@@ -9,67 +9,51 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/mohammadmehrani">
-    <img src="https://img.shields.io/badge/GitHub-mohammadmehrani-181717?style=for-the-badge&logo=github" alt="GitHub" />
+  <a href="https://github.com/nimamehrani">
+    <img src="https://img.shields.io/badge/GitHub-nimamehrani-181717?style=for-the-badge&logo=github" alt="GitHub" />
   </a>
-  <a href="https://www.linkedin.com/in/mohammadmehrani/">
-    <img src="https://img.shields.io/badge/LinkedIn-Mohammad%20Mehrani-0A66C2?style=for-the-badge&logo=linkedin" alt="LinkedIn" />
+  <a href="mailto:nima@nimamehrani.ir">
+    <img src="https://img.shields.io/badge/Email-nima%40nimamehrani.ir-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
   </a>
-  <a href="https://t.me/mohammad_mehrani">
-    <img src="https://img.shields.io/badge/Telegram-mohammad__mehrani-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
-  </a>
-  <a href="https://m-mehrani.ir/">
-    <img src="https://img.shields.io/badge/Blog-m--mehrani.ir-222222?style=for-the-badge&logo=hashnode&logoColor=white" alt="Blog" />
-  </a>
-  <a href="mailto:mehrani1992@gmail.com">
-    <img src="https://img.shields.io/badge/Email-mehrani1992%40gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
-  </a>
-  <a href="https://gitlab.com/mohammadmehrani">
-    <img src="https://img.shields.io/badge/GitLab-mohammadmehrani-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white" alt="GitLab" />
+  <a href="https://t.me/Nima4mehrani">
+    <img src="https://img.shields.io/badge/Telegram-nimamehrani-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
   </a>
 </p>
 
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=mohammadmehrani&style=for-the-badge&color=0e75b6" alt="Profile views" />
-  <img src="https://img.shields.io/github/followers/mohammadmehrani?style=for-the-badge&logo=github" alt="Followers" />
-</p>
-
-<p align="center">
-  <a href="https://mohammadmehrani.github.io/">mohammadmehrani.github.io</a>
-  ·
-  <a href="https://mohammadmehrani.vercel.app/">mohammadmehrani.vercel.app</a>
+  <a href="https://nima-ha.github.io/nimamehrani/">nima-ha.github.io/nimamehrani</a>
 </p>
 
 ## About Me
 
-DevOps Engineer with hands-on experience in CI/CD, Kubernetes, infrastructure automation, observability, and production-grade Linux environments. I focus on improving software delivery quality by designing dependable deployment workflows, secure infrastructure, and scalable cloud services.
+Full-Stack Developer & WordPress Expert with hands-on experience in web development, site design, and custom WordPress solutions. I build fast, responsive, and user-friendly websites.
 
 ## Tech Stack
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=python,go,js,ts,nodejs,docker,linux,git,github,gitlab,postgres,redis,vscode,nginx,bash" alt="Tech stack icons" />
+  <img src="https://skillicons.dev/icons?i=php,js,ts,react,nodejs,html,css,wordpress,git,linux" alt="Tech stack icons" />
 </p>
 
 ## GitHub Stats
 
-<!-- <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=mohammadmehrani&show_icons=true&count_private=true&include_all_commits=false&hide_border=true&theme=transparent" alt="GitHub stats" />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=mohammadmehrani&layout=compact&langs_count=8&hide_border=true&theme=transparent" alt="Top languages" />
-</p> -->
-
 <p align="center">
-  <img loading="lazy" src="https://github-readme-streak-stats.herokuapp.com/?user=mohammadmehrani&theme=transparent&hide_border=true" alt="GitHub streak stats" />
+  <img src="https://github-readme-stats.vercel.app/api?username=nimamehrani&show_icons=true&count_private=true&include_all_commits=false&hide_border=true&theme=transparent" alt="GitHub stats" />
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=nimamehrani&layout=compact&langs_count=8&hide_border=true&theme=transparent" alt="Top languages" />
 </p>
 
 <p align="center">
-  <img loading="lazy" src="https://github-readme-activity-graph.vercel.app/graph?username=mohammadmehrani&bg_color=0d1117&color=58a6ff&line=3fb950&point=f78166&area=true&hide_border=true" alt="GitHub activity graph" />
+  <img loading="lazy" src="https://github-readme-streak-stats.herokuapp.com/?user=nimamehrani&theme=transparent&hide_border=true" alt="GitHub streak stats" />
 </p>
 
 <p align="center">
-  <img loading="lazy" src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=mohammadmehrani&theme=github_dark" alt="Profile details" />
+  <img loading="lazy" src="https://github-readme-activity-graph.vercel.app/graph?username=nimamehrani&bg_color=0d1117&color=58a6ff&line=3fb950&point=f78166&area=true&hide_border=true" alt="GitHub activity graph" />
 </p>
 
 <p align="center">
-  <img loading="lazy" src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=mohammadmehrani&theme=github_dark" alt="Repos per language" />
-  <img loading="lazy" src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=mohammadmehrani&theme=github_dark" alt="Most commit language" />
+  <img loading="lazy" src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=nimamehrani&theme=github_dark" alt="Profile details" />
+</p>
+
+<p align="center">
+  <img loading="lazy" src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=nimamehrani&theme=github_dark" alt="Repos per language" />
+  <img loading="lazy" src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=nimamehrani&theme=github_dark" alt="Most commit language" />
 </p>

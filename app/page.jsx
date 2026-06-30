@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useAnimation, useInView, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import content from "../data/content.json";
@@ -8,8 +9,8 @@ import activityData from "../data/activity.json";
 import statsData from "../data/stats.json";
 import ThreeBackground from "../components/ThreeBackground";
 
-const GITHUB_USER = "mohammadmehrani";
-const WORKER_URL = "https://github-hub.mehrani1992-882.workers.dev";
+const GITHUB_USER = "nimamehrani";
+const WORKER_URL = "https://github-hub.nimamehrani.workers.dev";
 
 const reveal3d = {
   hidden: { opacity: 0, y: 40, rotateX: -16, scale: 0.97 },
@@ -122,7 +123,7 @@ export default function HomePage() {
         </div>
       </div>
       <header className="topbar">
-        <strong className="brand" style={{ visibility: stealth ? "hidden" : "visible" }}>M.Mehrani</strong>
+        <strong className="brand" style={{ visibility: stealth ? "hidden" : "visible" }}>N.Mehrani</strong>
         <nav>
           {t.nav.map((item) => (
             <a key={item} href="#" onClick={(e) => e.preventDefault()}>
@@ -149,14 +150,14 @@ export default function HomePage() {
             <h1>{t.hero.title}</h1>
             <p className="muted">{t.hero.desc}</p>
             <div className="row-btn">
-              <a className="btn" href="/pdf/M.Mehrani2026.pdf" target="_blank" rel="noreferrer">{t.hero.ctaResume}</a>
-              <a className="btn" href="#contact">{t.hero.ctaHire}</a>
+              <Link className="btn" href="/pdf/N.Mehrani-CV.pdf" target="_blank" rel="noreferrer">{t.hero.ctaResume}</Link>
+              <Link className="btn" href="#contact">{t.hero.ctaHire}</Link>
             </div>
           </Reveal>}
           {!stealth && <Reveal className="photo-wrap" amount={0.3} reduceMotion={shouldReduceMotion}>
             <Image
               src="/images/mehrani.jpg"
-              alt="Mohammad Mehrani"
+              alt="Nima Mehrani"
               width={320}
               height={320}
               priority
@@ -295,13 +296,12 @@ export default function HomePage() {
           <Reveal as="article" className="card" amount={0.2} duration={0.5} reduceMotion={shouldReduceMotion}>
             <h3>{t.contact.reach}</h3>
             <ul className="contacts">
-              <li><a href="mailto:admin@m-mehrani.ir">admin@m-mehrani.ir</a></li>
+              <li><a href="mailto:nima@nimamehrani.ir">nima@nimamehrani.ir</a></li>
               <li>{t.hero.location}</li>
             </ul>
             <p className="muted" style={{ marginTop: "1rem" }}>{t.contact.sites}</p>
             <ul className="contacts">
-              <li><a href="https://mohammadmehrani.github.io/" target="_blank" rel="noreferrer">mohammadmehrani.github.io</a></li>
-              <li><a href="https://mohammadmehrani.vercel.app/" target="_blank" rel="noreferrer">mohammadmehrani.vercel.app</a></li>
+              <li><a href="https://nima-ha.github.io/nimamehrani/" target="_blank" rel="noreferrer">nima-ha.github.io/nimamehrani</a></li>
             </ul>
             <div className="map-box" style={{ marginTop: "1.5rem" }}>
               <div className="map-head">

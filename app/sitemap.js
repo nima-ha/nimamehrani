@@ -1,7 +1,7 @@
 export default function sitemap() {
   return [
     {
-      url: 'https://mohammadmehrani.github.io',
+      url: 'https://nima-ha.github.io/nimamehrani',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1
